@@ -1,6 +1,26 @@
+/**
+ * @TODO메뉴수정
+ * 수정 버튼을 누르면 prompt창이 나온다.
+ * 입력창에 신규 메뉴를 입력하고, 확인을 누르면 수정된다.
+ */
+
+/**
+ * @TODO메뉴삭제
+ * 삭제 버튼을 누르면 confirm창이 나온다.
+ * 확인을 누르면 삭제된다.
+ * 총 메뉴 개수 count 업데이트
+ */
+
 const $ = (selector) => document.querySelector(selector);
 
-//메뉴 수정하기
+//카운트 업데이트
+const updateMenuCount = () => {
+  const menuCount = $("#espresso-menu-list").querySelectorAll("li").length;
+  $(".menu-count").innerText = `총 ${menuCount}개`;
+  $("#espresso-menu-name").value = "";
+};
+
+//메뉴 수정, 삭제하기
 $("#espresso-menu-list").addEventListener("click", (e) => {
   if (e.target.classList.contains("menu-edit-button")) {
     const $menuName = e.target.closest("li").querySelector(".menu-name");
@@ -9,6 +29,13 @@ $("#espresso-menu-list").addEventListener("click", (e) => {
       $menuName.innerText
     );
     $menuName.innerText = editedMenuName;
+  }
+
+  if (e.target.classList.contains("menu-remove-button")) {
+    if (confirm("정말 삭제하시겠습니까?")) {
+      e.target.closest("li").remove();
+      updateMenuCount();
+    }
   }
 });
 
@@ -49,9 +76,7 @@ const addMenuName = () => {
     menuItemTemplate(espressoMenuName)
   );
 
-  const menuCount = $("#espresso-menu-list").querySelectorAll("li").length;
-  $(".menu-count").innerText = `총 ${menuCount}개`;
-  $("#espresso-menu-name").value = "";
+  updateMenuCount();
 };
 
 //메뉴 입력 받기 ( 확인 버튼을 눌렀을때)
@@ -65,20 +90,5 @@ $("#espresso-menu-name").addEventListener("keypress", (e) => {
     //빈값일때 얼럿창을 띄워주누는 아래 if에서 글씨 하나 치면 얼럿창 나와서
     return;
   }
-  if (e.key === "Enter") {
-    addMenuName();
-  }
+  addMenuName();
 });
-
-/**
- * @TODO메뉴수정
- * 수정 버튼을 누르면 prompt창이 나온다.
- * 입력창에 신규 메뉴를 입력하고, 확인을 누르면 수정된다.
- */
-
-/**
- * @TODO메뉴삭제
- * 삭제 버튼을 누르면 confirm창이 나온다.
- * 확인을 누르면 삭제된다.
- * 총 메뉴 개수 count 업데이트
- */
