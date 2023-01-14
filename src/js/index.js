@@ -14,20 +14,15 @@ $("#espresso-menu-form").addEventListener("submit", (e) => {
   e.preventDefault();
 });
 
-//메뉴 입력 받기
-$("#espresso-menu-name").addEventListener("keypress", (e) => {
-  if (e.key !== "Enter") {
-    //빈값일때 얼럿창을 띄워주누는 아래 if에서 글씨 하나 치면 얼럿창 나와서
-    return;
-  }
+const addMenuName = () => {
   if ($("#espresso-menu-name").value === "") {
     alert("메시지를 입력해주세요");
     return;
   }
-  if (e.key === "Enter") {
-    const espressoMenuName = $("#espresso-menu-name").value;
-    const menuItemTemplate = (menuItemTemplate) => {
-      return `
+
+  const espressoMenuName = $("#espresso-menu-name").value;
+  const menuItemTemplate = (menuItemTemplate) => {
+    return `
     <li class="menu-list-item d-flex items-center py-2">
       <span class="w-100 pl-2 menu-name">${espressoMenuName}</span>
       <button
@@ -44,19 +39,34 @@ $("#espresso-menu-name").addEventListener("keypress", (e) => {
       </button>
     </li>
     `;
-    };
+  };
 
-    // $("#espresso-menu-list").innerHTML = menuItemTemplate(espressoMenuName); -> 덮어쓰기 됨
+  // $("#espresso-menu-list").innerHTML = menuItemTemplate(espressoMenuName); -> 덮어쓰기 됨
 
-    $("#espresso-menu-list").insertAdjacentHTML(
-      //beforebegin, afterbegin, beforeend, afterend
-      "beforeend",
-      menuItemTemplate(espressoMenuName)
-    );
+  $("#espresso-menu-list").insertAdjacentHTML(
+    //beforebegin, afterbegin, beforeend, afterend
+    "beforeend",
+    menuItemTemplate(espressoMenuName)
+  );
 
-    const menuCount = $("#espresso-menu-list").querySelectorAll("li").length;
-    $(".menu-count").innerText = `총 ${menuCount}개`;
-    $("#espresso-menu-name").value = "";
+  const menuCount = $("#espresso-menu-list").querySelectorAll("li").length;
+  $(".menu-count").innerText = `총 ${menuCount}개`;
+  $("#espresso-menu-name").value = "";
+};
+
+//메뉴 입력 받기 ( 확인 버튼을 눌렀을때)
+$("#espresso-menu-submit-button").addEventListener("click", (e) => {
+  addMenuName();
+});
+
+//메뉴 입력 받기 (Enter key를 눌렀을때)
+$("#espresso-menu-name").addEventListener("keypress", (e) => {
+  if (e.key !== "Enter") {
+    //빈값일때 얼럿창을 띄워주누는 아래 if에서 글씨 하나 치면 얼럿창 나와서
+    return;
+  }
+  if (e.key === "Enter") {
+    addMenuName();
   }
 });
 
