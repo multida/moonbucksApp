@@ -1,6 +1,9 @@
 /**
  * @TODO localStorage Read & Write
- * - [ ] localStorage에 데이터를 저장한다.
+ * - [X] localStorage에 데이터를 저장한다.
+ *  - [X] 메뉴를 추가할 때
+ *  - [X] 메뉴를 수정할 때
+ *  - [X] 메뉴를 삭제할 때
  * - [ ] localStorage에 있는 데이터를 읽어온다.
  *
  * @TODO 카테고리별 메뉴판 관리
@@ -33,7 +36,7 @@ const store = {
 
 function App() {
   // 상태(변하는 데이터) - 메뉴명
-  this.menu = [];
+  this.menu = []; //초기화를 해주는게 좋다. ( 어떤 형태로 받아오는지 알려줌. )
 
   const updateMenuCount = () => {
     const menuCount = $("#espresso-menu-list").querySelectorAll("li").length;
@@ -50,9 +53,9 @@ function App() {
     this.menu.push({ name: espressoMenuName }); //새로운 객체를 담는다?
     store.setLocalStorage(this.menu);
     const template = this.menu
-      .map((item) => {
+      .map((item, index) => {
         return `
-          <li class="menu-list-item d-flex items-center py-2">
+          <li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
             <span class="w-100 pl-2 menu-name">${item.name}</span>
             <button
               type="button"
@@ -77,19 +80,32 @@ function App() {
   };
 
   const updateMenuName = (e) => {
+    const menuId = e.target.closest("li").dataset.menuId;
     const $menuName = e.target.closest("li").querySelector(".menu-name");
     const editedMenuName = prompt(
       "메뉴 이름을 수정하시겠습니까?",
       $menuName.innerText
     );
-    if (editedMenuName === null || editedMenuName === undefined) {
-      console.log($menuName.value);
-    }
+
+    this.menu[menuId].name = editedMenuName;
+    store.setLocalStorage(this.menu);
+    /* *
+     * @TODO 취소를 눌렀을때 체크해주기
+     */
+    // if (editedMenuName === null || editedMenuName === undefined) {
+    //   console.log($menuName.value);
+    // }
     $menuName.innerText = editedMenuName;
   };
 
   const removeMenuName = (e) => {
     if (confirm("정말 삭제하시겠습니까?")) {
+      const menuId = e.target.closest("li").dataset.menuId;
+      this.menu.splice(menuId, 1);
+      //splice -> 배열의 기존 요소를 삭제 또는 교체하거나 새 요소를 추가하여 배열의 내용을 변경
+
+      // *@TODO 삭제할때 index 값이 이상함
+      store.setLocalStorage(this.menu);
       e.target.closest("li").remove();
       updateMenuCount();
     }
