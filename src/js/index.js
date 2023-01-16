@@ -1,28 +1,3 @@
-/**
- * @TODO localStorage Read & Write
- * - [X] localStorage에 데이터를 저장한다.
- *  - [X] 메뉴를 추가할 때
- *  - [X] 메뉴를 수정할 때
- *  - [X] 메뉴를 삭제할 때
- * - [X] localStorage에 있는 데이터를 읽어온다.
- *
- * @TODO 카테고리별 메뉴판 관리
- * - [X] ☕ 에스프레소 메뉴판 관리
- * - [X] 🥤 프라푸치노 메뉴판 관리
- * - [X] 🍹 블렌디드 메뉴판 관리
- * - [X] 🫖 티바나 메뉴판 관리
- * - [X] 🍰 디저트 메뉴판 관리
- *
- * @TODO 페이지 접근시 최초 데이터 Read & Rendering
- * - [X] 페이지 최초 로딩 시 localStorage에 담겨 있는 에스프레소 메뉴를 읽어온다.
- * - [X] 에스프레소 메뉴를 페이지에 그려준다.
- *
- * @TODO 품절 상태 관리
- * - [X] 품절 버튼을 추가 (.sold-out)
- * - [X] 품절 버튼을 클릭하면 localStorage에 상태값이 저장된다.
- * - [X] 클릭 이벤트에서 가장 가까운 li 태그에 sold-out을 추가한다.
- */
-
 const $ = (selector) => document.querySelector(selector);
 
 const store = {
@@ -121,7 +96,7 @@ function App() {
     // if (editedMenuName === null || editedMenuName === undefined) {
     //   console.log($menuName.value);
     // }
-    $menuName.innerText = editedMenuName;
+    render();
   };
 
   const removeMenuName = (e) => {
@@ -132,8 +107,7 @@ function App() {
 
       // *@TODO 삭제할때 index 값이 이상함
       store.setLocalStorage(this.menu);
-      e.target.closest("li").remove();
-      updateMenuCount();
+      render();
     }
   };
 
