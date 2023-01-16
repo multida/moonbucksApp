@@ -24,6 +24,7 @@ function App() {
       this.menu = store.getLocalStorage();
     }
     render();
+    initEventListeners();
   };
 
   const render = () => {
@@ -62,7 +63,7 @@ function App() {
   };
 
   const updateMenuCount = () => {
-    const menuCount = $("#menu-list").querySelectorAll("li").length;
+    const menuCount = this.menu[this.currentCategory].length;
     $(".menu-count").innerText = `총 ${menuCount}개`;
   };
 
@@ -120,51 +121,55 @@ function App() {
     render();
   };
 
-  //메뉴 수정, 삭제하기
-  $("#menu-list").addEventListener("click", (e) => {
-    if (e.target.classList.contains("menu-edit-button")) {
-      updateMenuName(e);
-      return;
-    }
+  //addEventListener 한군데로
+  const initEventListeners = () => {
+    //메뉴 수정, 삭제하기
+    $("#menu-list").addEventListener("click", (e) => {
+      if (e.target.classList.contains("menu-edit-button")) {
+        updateMenuName(e);
+        return;
+      }
 
-    if (e.target.classList.contains("menu-remove-button")) {
-      removeMenuName(e);
-      return;
-    }
+      if (e.target.classList.contains("menu-remove-button")) {
+        removeMenuName(e);
+        return;
+      }
 
-    if (e.target.classList.contains("menu-sold-out-button")) {
-      soldOutMenu(e);
-      return; //체크할게 없으면 return값을 넣어주는게 좋다.
-    }
-  });
+      if (e.target.classList.contains("menu-sold-out-button")) {
+        soldOutMenu(e);
+        return; //체크할게 없으면 return값을 넣어주는게 좋다.
+      }
+    });
 
-  //form 태그가 자동으로 전송되는걸 막기
-  $("#menu-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-  });
+    //form 태그가 자동으로 전송되는걸 막기
+    $("#menu-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+    });
 
-  //메뉴 입력 받기 ( 확인 버튼을 눌렀을때)
-  $("#menu-submit-button").addEventListener("click", addMenuName);
+    //메뉴 입력 받기 ( 확인 버튼을 눌렀을때)
+    $("#menu-submit-button").addEventListener("click", addMenuName);
 
-  //메뉴 입력 받기 (Enter key를 눌렀을때)
-  $("#menu-name").addEventListener("keypress", (e) => {
-    if (e.key !== "Enter") {
-      //빈값일때 얼럿창을 띄워주누는 아래 if에서 글씨 하나 치면 얼럿창 나와서
-      return;
-    }
-    addMenuName();
-  });
+    //메뉴 입력 받기 (Enter key를 눌렀을때)
+    $("#menu-name").addEventListener("keypress", (e) => {
+      if (e.key !== "Enter") {
+        //빈값일때 얼럿창을 띄워주누는 아래 if에서 글씨 하나 치면 얼럿창 나와서
+        return;
+      }
+      addMenuName();
+    });
 
-  $("nav").addEventListener("click", (e) => {
-    e.preventDefault();
-    const isCategoryButton = e.target.classList.contains("cafe-category-name");
-    if (isCategoryButton) {
-      const categoryName = e.target.dataset.categoryName;
-      this.currentCategory = categoryName;
-      $("#category-title").innerText = `${e.target.innerText} 메뉴 관리`;
-      render();
-    }
-  });
+    $("nav").addEventListener("click", (e) => {
+      e.preventDefault();
+      const isCategoryButton =
+        e.target.classList.contains("cafe-category-name");
+      if (isCategoryButton) {
+        const categoryName = e.target.dataset.categoryName;
+        this.currentCategory = categoryName;
+        $("#category-title").innerText = `${e.target.innerText} 메뉴 관리`;
+        render();
+      }
+    });
+  };
 }
 
 const app = new App();
