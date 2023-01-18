@@ -10,7 +10,7 @@ import store from "./store/index.js";
 // - [ ] 서버에 메뉴가 삭제될 수 있도록 요청한다.
 
 //TODO 리팩토링
-// - [ ] localStorage에 저장하는 로직은 지운다.
+// - [x] localStorage에 저장하는 로직은 지운다.
 // - [ ] fetch 비동기 api를 사용하는 부분을 async await을 사용하여 구현한다.
 
 //TODO 사용자 경험
@@ -79,18 +79,44 @@ function App() {
     $(".menu-count").innerText = `총 ${menuCount}개`;
   };
 
-  const addMenuName = () => {
+  const addMenuName = async () => {
     if ($("#menu-name").value === "") {
       alert("메시지를 입력해주세요");
       return;
     }
 
     const menuName = $("#menu-name").value;
-    this.menu[this.currentCategory].push({ name: menuName }); //새로운 객체를 담는다?
-    store.setLocalStorage(this.menu);
-    render();
 
-    $("#menu-name").value = "";
+    //데이터 생성
+    await fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: menuName }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      });
+
+    await fetch(`${BASE_URL}/category/${this.currentCategory}/menu`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        this.menu[this.currentCategory] = data;
+        render();
+        $("#menu-name").value = "";
+      });
+
+    //this.menu[this.currentCategory].push({ name: menuName }); //새로운 객체를 담는다?
+    // store.setLocalStorage(this.menu);
+    // render();
+
+    // $("#menu-name").value = "";
   };
 
   const updateMenuName = (e) => {
