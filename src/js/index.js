@@ -2,7 +2,7 @@ import { $ } from "./utils/dom.js";
 import store from "./store/index.js";
 
 //TODO 서버 요청 부분
-// - [ ] 웹 서버를 띄운다.
+// - [x] 웹 서버를 띄운다.
 // - [ ] 서버에 새로운 메뉴가 추가될 수 있도록 요청한다.
 // - [ ] 서버에 카테고리별 메뉴 리스트를 불러온다.
 // - [ ] 서버에 메뉴가 수정될 수 있도록 요청한다.
@@ -16,6 +16,10 @@ import store from "./store/index.js";
 //TODO 사용자 경험
 // - [ ] API 통신이 실패하는 경우에 대해 사용자가 알 수 있게 alert으로 예외처리를 진행한다.
 // - [ ] 중복되는 메뉴는 추가할 수 없다.
+
+const BASE_URL = "http://localhost:3000/api";
+
+//fetch(`${BASE_URL}`, option);
 
 function App() {
   // 상태(변하는 데이터) - 메뉴명
