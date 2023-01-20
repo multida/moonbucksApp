@@ -63,6 +63,17 @@ const MenuApi = {
       console.log("에러가 발생했습니다.");
     }
   },
+  async deleteMenu(category, menuId) {
+    const response = await fetch(
+      `${BASE_URL}/category/${category}/menu/${menuId}`,
+      {
+        method: "DELETE",
+      }
+    );
+    if (!response.ok) {
+      console.log("에러가 발생했습니다.");
+    }
+  },
 };
 
 function App() {
@@ -162,14 +173,18 @@ function App() {
     // }
   };
 
-  const removeMenuName = (e) => {
+  const removeMenuName = async (e) => {
     if (confirm("정말 삭제하시겠습니까?")) {
       const menuId = e.target.closest("li").dataset.menuId;
-      this.menu[this.currentCategory].splice(menuId, 1);
+      await MenuApi.deleteMenu(this.currentCategory, menuId);
+      this.menu[this.currentCategory] = await MenuApi.getAllMenuByCategory(
+        this.currentCategory
+      );
+      //this.menu[this.currentCategory].splice(menuId, 1);
       //splice -> 배열의 기존 요소를 삭제 또는 교체하거나 새 요소를 추가하여 배열의 내용을 변경
 
       // *@TODO 삭제할때 index 값이 이상함
-      store.setLocalStorage(this.menu);
+      // store.setLocalStorage(this.menu);
       render();
     }
   };
