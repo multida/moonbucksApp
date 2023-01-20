@@ -26,7 +26,7 @@ const MenuApi = {
   },
   async createMenu(category, name) {
     const response = await fetch(`${BASE_URL}/category/${category}/menu`, {
-      method: "POST",
+      method: "POST", //생성
       headers: {
         "Content-Type": "application/json",
       },
@@ -35,6 +35,22 @@ const MenuApi = {
     if (!response.ok) {
       console.log("에러가 발생했습니다.");
     }
+  },
+  async updateMenu(category, name, menuId) {
+    const response = await fetch(
+      `${BASE_URL}/category/${category}/menu/${menuId}`,
+      {
+        method: "PUT", //수정
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+      }
+    );
+    if (!response.ok) {
+      console.log("에러가 발생했습니다.");
+    }
+    return response.json();
   },
 };
 
@@ -60,7 +76,9 @@ function App() {
     const template = this.menu[this.currentCategory]
       .map((item, index) => {
         return `
-        <li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
+        <li data-menu-id="${
+          item.id
+        }" class="menu-list-item d-flex items-center py-2">
           <span class="${
             item.soldOut ? "sold-out" : ""
           } w-100 pl-2 menu-name">${item.name}</span>
@@ -111,23 +129,26 @@ function App() {
     $("#menu-name").value = "";
   };
 
-  const updateMenuName = (e) => {
+  const updateMenuName = async (e) => {
     const menuId = e.target.closest("li").dataset.menuId;
     const $menuName = e.target.closest("li").querySelector(".menu-name");
     const editedMenuName = prompt(
       "메뉴 이름을 수정하시겠습니까?",
       $menuName.innerText
     );
-
-    this.menu[this.currentCategory][menuId].name = editedMenuName;
-    store.setLocalStorage(this.menu);
+    await MenuApi.updateMenu(this.currentCategory, editedMenuName, menuId);
+    this.menu[this.currentCategory] = await MenuApi.getAllMenuByCategory(
+      this.currentCategory
+    );
+    render();
+    // this.menu[this.currentCategory][menuId].name = editedMenuName;
+    // store.setLocalStorage(this.menu);
     /* *
      * @TODO 취소를 눌렀을때 체크해주기
      */
     // if (editedMenuName === null || editedMenuName === undefined) {
     //   console.log($menuName.value);
     // }
-    render();
   };
 
   const removeMenuName = (e) => {
